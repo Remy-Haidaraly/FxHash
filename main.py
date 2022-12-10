@@ -6,6 +6,26 @@ import hashlib
 
 
 
+##############################  Function ##############################
+
+# choice wordlist
+def file_open(): 
+    path = filedialog.askopenfilename(filetypes=(("txt files", "*.txt"),)) # .txt only
+    wordlist_entry.configure(state="normal")
+    wordlist_entry.delete(0, 'end') # clean text 
+    wordlist_entry.insert(0, path) 
+    wordlist_entry.configure(state="disabled")
+
+
+
+
+
+
+
+
+
+##############################  Function ##############################
+
 ##############################  MAIN APP CONFIGURE ##############################
 
 customtkinter.set_appearance_mode("dark")
@@ -63,7 +83,7 @@ wordlist_entry.configure(state="disabled")
 
 ##############################  add button ##############################
 
-wordlist_button = customtkinter.CTkButton(master=app,width=30,height=32,border_width=0,corner_radius=8,text="...")
+wordlist_button = customtkinter.CTkButton(master=app,width=30,height=32,border_width=0,corner_radius=8,text="...",command=file_open)
 wordlist_button.place(relx=0.75, rely=0.35, anchor=tkinter.CENTER)
 
 start_button = customtkinter.CTkButton(master=app,width=700,height=32,border_width=0,corner_radius=8,text="Start")
