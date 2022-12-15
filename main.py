@@ -1,10 +1,13 @@
 import tkinter
-from tkinter import filedialog, DISABLED, PhotoImage, Canvas, YES
+from tkinter import filedialog
 import customtkinter
 from PIL import Image
 import hashlib
+import time
+import multiprocessing
 
 ##############################  Function ##############################
+
 
 # choice wordlist
 def file_open(): 
@@ -15,35 +18,38 @@ def file_open():
     wordlist_entry.configure(state="disabled")
 
 
-##### trouver comment effacer du text dans notre textbox si je refait un start après une tentative
-def start():
-    max_number_line = 0
-    hash_algorithm = combobox.get()
-    user_hash = hash_entry.get()
-    path_wordlist = wordlist_entry.get()
+def check(event):
+    if wordlist_entry.get() != "" and hash_entry.get() != "":
+        start_button.configure(state="normal")
+    else:
+        start_button.configure(state="disabled")
 
-    wordlist_file = open(path_wordlist,"r",errors="ignore")
+def start():
+    start_time = time.time()
+    hash_found = False
+    max_number_line = 0
+    wordlist_file = open(wordlist_entry.get(),"r",errors="ignore")
     current_line = wordlist_file.read().splitlines()
     
     for i in current_line:
         max_number_line +=1 # count number word in wordlist
 
-    for y in range(max_number_line):
-        resultat = hashlib.new(hash_algorithm,current_line[y].encode())
-        resultatHash = resultat.hexdigest() # to base16
+    for word in range(max_number_line):
+        hash = hashlib.new(combobox.get(),current_line[word].encode())
+        hashed_password  = hash.hexdigest() # to base16
 
         ## check verification 
-        if(user_hash == resultatHash):
-            textbox.configure(state="normal")
-            textbox.delete(0.0, 'end') # clean text
-            textbox.insert(0.0, "The password is : " + current_line[y])
-            textbox.configure(state="disabled")
+        if(hash_entry.get() == hashed_password ):
+            textbox.delete(0.0, 'end')
+            textbox.insert(0.0, f"The password is: {current_line[word]}")
+            hash_found = True
+            print("--- %s seconds ---" % (time.time() - start_time))
             break
-        else:
-            textbox.configure(state="normal")
-            textbox.delete(0.0, 'end') # clean text
-            textbox.insert(0.0, "Password no found")
-            textbox.configure(state="disabled")
+
+    if hash_found == False:
+         textbox.delete(0.0, 'end') # clean text 
+         textbox.insert(0.0, "Password no found")
+         print("--- %s seconds ---" % (time.time() - start_time))
 
 
 ##############################  Function ##############################
@@ -98,7 +104,6 @@ hash_entry.place(relx=0.45, rely=0.25, anchor=tkinter.CENTER)
 
 wordlist_entry = customtkinter.CTkEntry(master=app,width=400,height=30,border_width=2,corner_radius=15)
 wordlist_entry.place(relx=0.45, rely=0.35, anchor=tkinter.CENTER)
-wordlist_entry.configure(state="disabled")
 
 ##############################  add entry ##############################
 
@@ -110,6 +115,7 @@ wordlist_button.place(relx=0.75, rely=0.35, anchor=tkinter.CENTER)
 
 start_button = customtkinter.CTkButton(master=app,width=700,height=32,border_width=0,corner_radius=8,text="Start", command=start)
 start_button.place(relx=0.50, rely=0.60, anchor=tkinter.CENTER)
+
 
 ##############################  add button ##############################
 
@@ -129,8 +135,10 @@ combobox.set("Type Hash")
 textbox = customtkinter.CTkTextbox(master=app, width=500, height=30,corner_radius=8)
 textbox.place(relx=0.50, rely=0.50, anchor=tkinter.CENTER)
 textbox.insert("0.0", "") 
-textbox.configure(state="disabled")
+
 
 ##############################  add textbox ##############################
+
+
 
 app.mainloop()
