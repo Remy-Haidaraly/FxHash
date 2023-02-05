@@ -3,8 +3,6 @@ from tkinter import filedialog
 import customtkinter
 from PIL import Image
 import hashlib
-import time
-import multiprocessing
 
 ##############################  Function ##############################
 
@@ -24,32 +22,31 @@ def check(event):
     else:
         start_button.configure(state="disabled")
 
+
+
 def start():
-    start_time = time.time()
     hash_found = False
-    max_number_line = 0
     wordlist_file = open(wordlist_entry.get(),"r",errors="ignore")
     current_line = wordlist_file.read().splitlines()
-    
-    for i in current_line:
-        max_number_line +=1 # count number word in wordlist
+    max_number_line = len(current_line)
 
     for word in range(max_number_line):
         hash = hashlib.new(combobox.get(),current_line[word].encode())
-        hashed_password  = hash.hexdigest() # to base16
+        hashed_password = hash.hexdigest() # to base16
 
         ## check verification 
         if(hash_entry.get() == hashed_password ):
             textbox.delete(0.0, 'end')
             textbox.insert(0.0, f"The password is: {current_line[word]}")
+            textbox.configure(state="disabled")
             hash_found = True
-            print("--- %s seconds ---" % (time.time() - start_time))
             break
 
     if hash_found == False:
          textbox.delete(0.0, 'end') # clean text 
          textbox.insert(0.0, "Password no found")
-         print("--- %s seconds ---" % (time.time() - start_time))
+         textbox.configure(state="disabled")
+
 
 
 ##############################  Function ##############################
@@ -138,7 +135,4 @@ textbox.insert("0.0", "")
 
 
 ##############################  add textbox ##############################
-
-
-
 app.mainloop()
