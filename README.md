@@ -37,8 +37,8 @@ Install my-project
 
 ```bash
   git clone https://github.com/Remy-Haidaraly/FxHash.git
+  cd FxHash 
   pip install -r requirements.txt
-  cd FxHash
   python main.py
 
 ```
