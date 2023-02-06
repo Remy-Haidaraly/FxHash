@@ -36,6 +36,7 @@ def start():
 
         ## check verification 
         if(hash_entry.get() == hashed_password ):
+            textbox.configure(state="normal")
             textbox.delete(0.0, 'end')
             textbox.insert(0.0, f"The password is: {current_line[word]}")
             textbox.configure(state="disabled")
@@ -43,6 +44,7 @@ def start():
             break
 
     if hash_found == False:
+         textbox.configure(state="normal")
          textbox.delete(0.0, 'end') # clean text 
          textbox.insert(0.0, "Password no found")
          textbox.configure(state="disabled")
@@ -132,6 +134,7 @@ combobox.set("Type Hash")
 textbox = customtkinter.CTkTextbox(master=app, width=500, height=30,corner_radius=8)
 textbox.place(relx=0.50, rely=0.50, anchor=tkinter.CENTER)
 textbox.insert("0.0", "") 
+textbox.configure(state="disabled")
 
 
 ##############################  add textbox ##############################
